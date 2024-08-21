@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <!-- Tree View -->
+        <record id="todo_task_view_tree" model="ir.ui.view">
+            <field name="name">todo.task.tree.view</field>
+            <field name="model">todo.task</field>
+            <field name="arch" type="xml">
+                <tree class="header_custom" multi_edit="1" >
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="todo_task_view_form" model="ir.ui.view">
+            <field name="name">todo.task.form.view</field>
+            <field name="model">todo.task</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <header>
+                            <button name="action_new" type="object" string="Set To New" class="btn-primary" invisible="state == 'new'" />
+                            <button name="action_in_progress" type="object" string="Set To In-Progress" class="btn-secondary" invisible="state != 'new'" />
+                            <button name="action_completed" type="object" string="Set To Completed" class="btn-success" invisible="state != 'in_progress'" />
+                            <field name="state" widget="statusbar" />
+                        </header>
+
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Task Info">
+                                <field name="partner_id"/>
+                                <field name="date"/>
+                                <field name="description"/>
+                            </group>
+                            </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="todo_task_view_search" model="ir.ui.view">
+            <field name="name">todo.task.search.view</field>
+            <field name="model">todo.task</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <filter name="new" string="New Tasks" domain="[('state', '=', 'new')]"/>
+                    <filter name="in_progress" string="In Progress Tasks" domain="[('state', '=', 'in_progress')]"/>
+                    <filter name="completed" string="Completed Tasks" domain="[('state', '=', 'completed')]"/>
+                    <filter name="group_partner_id" string="Assign To" context="{'group_by':'partner_id'}"/>
+                    <filter name="group_state" string="States" context="{'group_by':'state'}"/>
+                    <filter name="group_date" string="Due Date" context="{'group_by':'date'}"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="todo_task_action" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">todo.task</field>
+
+        </record>
+
+
+        <menuitem id="all_tasks_item"
+            name="All Tasks"
+            parent="todo_task_menu"
+            action="todo_task_action"
+        />
+    </data>
+</odoo>
